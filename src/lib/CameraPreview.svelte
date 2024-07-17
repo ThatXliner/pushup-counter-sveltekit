@@ -33,6 +33,8 @@
 						const right_shoulder = keypoints.find((keypoint) => keypoint.name === 'right_shoulder');
 						const left_elbow = keypoints.find((keypoint) => keypoint.name === 'left_elbow');
 						const right_elbow = keypoints.find((keypoint) => keypoint.name === 'right_elbow');
+						const left_hip = keypoints.find((keypoint) => keypoint.name === 'left_hip');
+						const right_hip = keypoints.find((keypoint) => keypoint.name === 'right_hip');
 
 						const left_shoulder_to_elbow = Math.round(
 							Math.sqrt(
@@ -47,14 +49,13 @@
 							)
 						);
 						log = { left_shoulder_to_elbow, right_shoulder_to_elbow };
+
 						// calibrate these values per person
-						if (left_shoulder_to_elbow < 40 && right_shoulder_to_elbow < 40) {
-							if (isUp) {
-								pushups++;
-								isUp = false;
-							}
+						const hips_visible = left_hip.score > 0.5 && right_hip.score > 0.5;
+						if (!hips_visible && left_shoulder_to_elbow < 40 && right_shoulder_to_elbow < 40) {
+							isUp = false;
 						}
-						if (left_shoulder_to_elbow > 50 && right_shoulder_to_elbow > 50) {
+						if (hips_visible && left_shoulder_to_elbow > 50 && right_shoulder_to_elbow > 50) {
 							if (!isUp) {
 								pushups++;
 							}
