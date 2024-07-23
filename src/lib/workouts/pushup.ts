@@ -1,10 +1,11 @@
 import type { Pose } from '@tensorflow-models/pose-detection';
-import type Workout from '.';
+import Workout from '.';
 
-export default class Pushup implements Workout {
+export default class Pushup extends Workout {
 	private isUp: boolean;
 	private pushups: number;
 	constructor() {
+		super();
 		this.isUp = true;
 		this.pushups = 0;
 	}

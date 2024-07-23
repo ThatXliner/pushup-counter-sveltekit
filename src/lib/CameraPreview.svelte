@@ -4,7 +4,8 @@
 
 	export let detector: PoseDetector;
 	export let onFrame: (poses: Pose[]) => void;
-	export const frameRate = 1000 / 30; // Adjust the frame rate as needed
+	export const fps: number = 30; // Adjust the frame rate as needed
+	const frameRate = 1000 / fps; // Adjust the frame rate as needed
 	let videoElement: HTMLVideoElement;
 	let stream: MediaStream;
 

@@ -13,12 +13,11 @@
 			await tf.ready();
 		})();
 	});
-	const detectorConfig = { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING };
-	const detectorPromise = poseDetection.createDetector(
-		poseDetection.SupportedModels.MoveNet,
-		detectorConfig
-	);
 	const workout: Workout = $state(new Pushup());
+	const modelConfig = $derived(workout.getModelConfigurations());
+	const detectorPromise = $derived(
+		poseDetection.createDetector(modelConfig.type, modelConfig.config)
+	);
 	let log = $state('');
 </script>
 
@@ -29,6 +28,7 @@
 	<p>{log}</p>
 	<CameraPreview
 		{detector}
+		fps={modelConfig.fps}
 		onFrame={(poses) => {
 			log = workout.onFrame(poses);
 		}}
