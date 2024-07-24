@@ -18,21 +18,13 @@
 	const detectorPromise = $derived(
 		poseDetection.createDetector(modelConfig.type, modelConfig.config)
 	);
-	let log = $state('');
 </script>
 
 {#await detectorPromise}
 	<p>loading detector model...</p>
 {:then detector}
 	<p>loaded</p>
-	<p>{log}</p>
-	<CameraPreview
-		{detector}
-		fps={modelConfig.fps}
-		onFrame={(poses) => {
-			log = workout.onFrame(poses);
-		}}
-	/>
+	<CameraPreview {detector} fps={modelConfig.fps} {workout} />
 {:catch error}
 	<p>{error.message}</p>
 {/await}

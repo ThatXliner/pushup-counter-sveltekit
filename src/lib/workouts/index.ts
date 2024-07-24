@@ -31,4 +31,5 @@ export default abstract class Workout {
 	}
 	abstract getDetectionCount(): number;
 	abstract onFrame(poses: Pose[]): string;
+	abstract recalibrate(): void;
 }
