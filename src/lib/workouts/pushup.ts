@@ -118,9 +118,11 @@ export default class Pushup extends Workout {
 		if (isDown) {
 			this.isUp = false;
 		}
-		if (!isDown && !this.isUp) {
+		if (!isDown) {
+			if (!this.isUp) {
+				this.pushups++;
+			}
 			this.isUp = true;
-			this.pushups++;
 		}
 		// console.log(left_shoulder_to_elbow, right_shoulder_to_elbow);
 		return `Pushups: ${this.pushups}`;
