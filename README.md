@@ -25,6 +25,14 @@ npm run dev
 npm run dev -- --open
 ```
 
+
+For tests, create frames with
+
+```
+ffmpeg -i input -r 30 -vf scale="iw/2:ih/2" frame_%04d.jpg
+```
+
+INSIDE the directory that stores the frames. here, 30 is the framerate (all should be in 30 fps). the `-vf scale="iw/2:ih/2"` scales the image to half the size.
 ## Building
 
 To create a production version of your app:

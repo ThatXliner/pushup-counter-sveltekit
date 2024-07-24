@@ -8,7 +8,7 @@ export default class Pushup extends Workout {
 	private average_right_wrist: { x: number; y: number } | null;
 	private iterations: number;
 
-	private readonly FRAME_REJECTION_THRESHOLD = 15;
+	private readonly FRAME_REJECTION_THRESHOLD = 0.2;
 	constructor() {
 		super();
 		this.isUp = true;
@@ -29,7 +29,11 @@ export default class Pushup extends Workout {
 		this.average_right_wrist = null;
 		this.iterations = 0;
 	}
+	public getDetectionCount(): number {
+		return this.pushups;
+	}
 	public onFrame(poses: Pose[]): string {
+		if (poses.length === 0) return 'No poses detected';
 		this.iterations++;
 		const keypoints = poses[0].keypoints;
 		const left_shoulder = keypoints.find((keypoint) => keypoint.name === 'left_shoulder')!;
@@ -107,14 +111,20 @@ export default class Pushup extends Workout {
 		);
 		const are_elbows_bent =
 			left_elbow_angle * (180 / Math.PI) < 90 && right_elbow_angle * (180 / Math.PI) < 90;
+		const are_elbows_straight =
+			left_elbow_angle * (180 / Math.PI) > 150 && right_elbow_angle * (180 / Math.PI) > 150;
+
 		// XXX: Tuned to my personal arm lengths
-		const chest_close_to_ground = nose_to_right_wrist < 130 && nose_to_left_wrist < 130;
+		const chest_close_to_ground = nose_to_right_wrist < 0.45 && nose_to_left_wrist < 0.45;
+		const chest_far_from_ground = !chest_close_to_ground; // it's a bit strict so we'll just use the opposite
 
 		const isDown = are_elbows_bent && chest_close_to_ground;
+		const isUp = are_elbows_straight && chest_far_from_ground;
 		if (isDown) {
 			this.isUp = false;
 		}
-		if (!isDown) {
+		if (isUp) {
+			console.assert(!isDown);
 			if (!this.isUp) {
 				this.pushups++;
 			}
