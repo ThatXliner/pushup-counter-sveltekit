@@ -60,8 +60,8 @@ export default class Pushup extends Workout {
 			this.average_right_wrist = right_wrist;
 		} else {
 			const distance_from_average = Math.sqrt(
-				(left_wrist.x - this.average_left_wrist.x) ** 2 +
-					(left_wrist.y - this.average_left_wrist.y) ** 2
+				(right_wrist.x - this.average_right_wrist.x) ** 2 +
+					(right_wrist.y - this.average_right_wrist.y) ** 2
 			);
 			this.average_right_wrist.x += (right_wrist.x - this.average_right_wrist.x) / this.iterations;
 			this.average_right_wrist.y += (right_wrist.y - this.average_right_wrist.y) / this.iterations;
