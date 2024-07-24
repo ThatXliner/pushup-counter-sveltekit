@@ -32,6 +32,9 @@ export default class Pushup extends Workout {
 		const right_wrist = keypoints.find((keypoint) => keypoint.name === 'right_wrist')!;
 
 		// keep a running average
+		// We don't use exponential running average because from testing,
+		// it stabilizes too fast, allowing for cheating. Using a regular
+		// running average punishes large movements greatly
 		if (this.average_left_wrist === null) {
 			this.average_left_wrist = left_wrist;
 		} else {
