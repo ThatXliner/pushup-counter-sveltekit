@@ -2,7 +2,7 @@ import type Workout from '$lib/workouts';
 import { expect, test } from 'bun:test';
 import { Glob } from 'bun';
 import Pushup from '$lib/workouts/pushup';
-import { readdir } from 'node:fs/promises';
+import { readdir, stat } from 'node:fs/promises';
 import tfnode from '@tensorflow/tfjs-node';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs-core';
@@ -15,7 +15,8 @@ async function runModel(workout: string, model: Workout) {
 	const modelConfig = model.getModelConfigurations();
 	const detector = await poseDetection.createDetector(modelConfig.type, modelConfig.config);
 	for (const folder of await readdir(`tests/assets/${workout}`)) {
-		const glob = new Glob(`tests/assets/${workout}/${folder}/frame_*.png`);
+		if (!(await stat(`tests/assets/${workout}/${folder}`)).isDirectory()) continue;
+		const glob = new Glob(`tests/assets/${workout}/${folder}/frame_*.{png,jpg}`);
 		console.log('Reading frames');
 		const frames = await Promise.all(
 			[...glob.scanSync()]
