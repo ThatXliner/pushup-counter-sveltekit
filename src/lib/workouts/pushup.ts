@@ -7,6 +7,8 @@ export default class Pushup extends Workout {
 	private average_left_wrist: { x: number; y: number } | null;
 	private average_right_wrist: { x: number; y: number } | null;
 	private iterations: number;
+
+	private readonly FRAME_REJECTION_THRESHOLD = 15;
 	constructor() {
 		super();
 		this.isUp = true;
@@ -20,6 +22,12 @@ export default class Pushup extends Workout {
 			...DEFAULT_MOVENET_CONFIG,
 			config: { ...DEFAULT_MOVENET_CONFIG.config, minPoseScore: 0.5 }
 		};
+	}
+	public recalibrate(): void {
+		this.isUp = true;
+		this.average_left_wrist = null;
+		this.average_right_wrist = null;
+		this.iterations = 0;
 	}
 	public onFrame(poses: Pose[]): string {
 		this.iterations++;
@@ -44,7 +52,7 @@ export default class Pushup extends Workout {
 			);
 			this.average_left_wrist.x += (left_wrist.x - this.average_left_wrist.x) / this.iterations;
 			this.average_left_wrist.y += (left_wrist.y - this.average_left_wrist.y) / this.iterations;
-			if (distance_from_average > 10) {
+			if (distance_from_average > this.FRAME_REJECTION_THRESHOLD) {
 				return "Frame rejected; don't move your wrist";
 			}
 		}
@@ -57,7 +65,7 @@ export default class Pushup extends Workout {
 			);
 			this.average_right_wrist.x += (right_wrist.x - this.average_right_wrist.x) / this.iterations;
 			this.average_right_wrist.y += (right_wrist.y - this.average_right_wrist.y) / this.iterations;
-			if (distance_from_average > 10) {
+			if (distance_from_average > this.FRAME_REJECTION_THRESHOLD) {
 				return "Frame rejected; don't move your wrist";
 			}
 		}

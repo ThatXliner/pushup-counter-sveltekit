@@ -30,4 +30,5 @@ export default abstract class Workout {
 		return DEFAULT_MOVENET_CONFIG;
 	}
 	abstract onFrame(poses: Pose[]): string;
+	abstract recalibrate(): void;
 }
