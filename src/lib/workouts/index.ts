@@ -29,5 +29,6 @@ export default abstract class Workout {
 	getModelConfigurations(): ModelConfigurations {
 		return DEFAULT_MOVENET_CONFIG;
 	}
+	abstract getDetectionCount(): number;
 	abstract onFrame(poses: Pose[]): string;
 }

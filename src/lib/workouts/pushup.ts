@@ -9,7 +9,11 @@ export default class Pushup extends Workout {
 		this.isUp = true;
 		this.pushups = 0;
 	}
+	public getDetectionCount(): number {
+		return this.pushups;
+	}
 	public onFrame(poses: Pose[]): string {
+		if (poses.length === 0) return 'No poses detected';
 		const keypoints = poses[0].keypoints;
 		const left_shoulder = keypoints.find((keypoint) => keypoint.name === 'left_shoulder');
 		const right_shoulder = keypoints.find((keypoint) => keypoint.name === 'right_shoulder');
@@ -27,17 +31,17 @@ export default class Pushup extends Workout {
 		const log = { left_shoulder_to_elbow, right_shoulder_to_elbow };
 
 		// calibrate these values per person
-		const hips_visible = left_hip.score > 0.5 && right_hip.score > 0.5;
-		if (!hips_visible && left_shoulder_to_elbow < 40 && right_shoulder_to_elbow < 40) {
+
+		if (left_shoulder_to_elbow < 40 && right_shoulder_to_elbow < 40) {
 			this.isUp = false;
 		}
-		if (hips_visible && left_shoulder_to_elbow > 50 && right_shoulder_to_elbow > 50) {
+		if (left_shoulder_to_elbow > 50 && right_shoulder_to_elbow > 50) {
 			if (!this.isUp) {
 				this.pushups++;
 			}
 			this.isUp = true;
 		}
-		console.log(left_shoulder_to_elbow, right_shoulder_to_elbow);
+		// console.log(left_shoulder_to_elbow, right_shoulder_to_elbow);
 		return `Pushups: ${this.pushups}\n${JSON.stringify(log)}`;
 	}
 }
