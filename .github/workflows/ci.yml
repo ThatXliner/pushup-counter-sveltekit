@@ -16,7 +16,9 @@ jobs:
         run: bun install
 
       - name: Setup tests
-        run: tar xzf pushup.tar.gz
+        run: |
+          git lfs pull
+          tar xzf pushup.tar.gz
         working-directory: tests/assets
 
       - name: Run tests
