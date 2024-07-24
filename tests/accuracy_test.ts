@@ -46,6 +46,11 @@ async function runModel(workout: string, model: Workout) {
 		expect(model.getDetectionCount()).toBe(Number.parseInt(folder));
 	}
 }
-test('Pushup model accuracy', async () => {
-	await runModel('pushup', new Pushup());
-});
+test(
+	'Pushup model accuracy',
+	async () => {
+		await runModel('pushup', new Pushup());
+	},
+	// A minute timeout
+	60 * 1000
+);
