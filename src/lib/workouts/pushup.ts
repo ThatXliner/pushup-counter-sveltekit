@@ -1,5 +1,5 @@
 import type { Pose } from '@tensorflow-models/pose-detection';
-import Workout from '.';
+import Workout, { DEFAULT_MOVENET_CONFIG } from '.';
 
 export default class Pushup extends Workout {
 	private isUp: boolean;
@@ -14,6 +14,12 @@ export default class Pushup extends Workout {
 		this.pushups = 0;
 		this.average_left_wrist = null;
 		this.average_right_wrist = null;
+	}
+	getModelConfigurations() {
+		return {
+			...DEFAULT_MOVENET_CONFIG,
+			config: { ...DEFAULT_MOVENET_CONFIG.config, minPoseScore: 0.5 }
+		};
 	}
 	public onFrame(poses: Pose[]): string {
 		this.iterations++;
