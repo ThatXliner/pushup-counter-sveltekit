@@ -1,5 +1,5 @@
 import type { Pose } from '@tensorflow-models/pose-detection';
-import Workout, { DEFAULT_BLAZEPOSE_CONFIG, type ModelConfigurations } from '.';
+import Workout from '.';
 
 export default class Pushup extends Workout {
 	private isUp: boolean;
