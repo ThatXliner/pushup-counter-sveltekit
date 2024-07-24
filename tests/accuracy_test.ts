@@ -42,29 +42,10 @@ async function runModel(workout: string, model: Workout) {
 			const width = image.shape[1];
 			const poses = await detector.estimatePoses(image, {}, index++ * (1 / 30) * 1000);
 			model.onFrame(normalizePoses(poses, height, width));
-			// console.log(index, model.getDetectionCount());
 		}
 		expect(model.getDetectionCount()).toBe(Number.parseInt(folder));
-		// console.log(frames[0]);
 	}
-	// const glob = new Glob(`./assets/${workout}/[0-9]+`);
-	// console.log([...glob.scanSync()], `./assets/${workout}/[0-9]+/`);
-	// const frames = [...glob.scanSync()].sort(
-	// 	// sort by frame number
-	// 	(a, b) => {
-	// 		console.log(a, b);
-	// 		const aNum = Number.parseInt(a.split('.')[0]);
-	// 		const bNum = Number.parseInt(b.split('.')[0]);
-	// 		return aNum - bNum;
-	// 	}
-	// );
-	// console.log(frames, model);
 }
-test(
-	'Pushup model accuracy',
-	async () => {
-		await runModel('pushup', new Pushup());
-		expect(2 + 2).toBe(4);
-	},
-	1000 * 60 // 1 minute timeout
-);
+test('Pushup model accuracy', async () => {
+	await runModel('pushup', new Pushup());
+});

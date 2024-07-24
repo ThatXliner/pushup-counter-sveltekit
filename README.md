@@ -1,46 +1,63 @@
-# create-svelte
+# pushup-counter-sveltekit
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+A prototype repo for [45](https://github.com/ThatXliner/45). Demo [here](https://thatxliner.github.io/pushup-counter-sveltekit/). Currently implements
 
-## Creating a project
+- pushup detection
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Roadmap
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+I know this is a prototype but it's pretty useful as a demo
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- Better UI
+- More exercises (misnamed as "workouts" in the code... oops)
+
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Setting up
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+git clone https://github.com/ThatXliner/pushup-counter-sveltekit.git
+cd pushup-counter-sveltekit
+bun install  # Install bun if needed (https://bun.sh)
 ```
 
+### New workout
 
-For tests, create frames with
+Create a new workout named `<workout>.ts` where `<WORKOUT>` is the name of the workout. Make it `export default` a class that `extends Workout` (which is an abstract class in `src/lib/workouts/index.ts`).
 
+Dev server:
+
+```bash
+bun run dev
 ```
-ffmpeg -i input -r 30 -vf scale="iw/2:ih/2" frame_%04d.jpg
+
+#### Update tests
+
+Update `tests/assets/accuracy_test.ts` with this at the bottom
+
+```diff
++ test('<WORKOUT> model accuracy', async () => {
++ 	await runModel('<WORKOUT>', new <WORKOUT>());
++ });
 ```
 
-INSIDE the directory that stores the frames. here, 30 is the framerate (all should be in 30 fps). the `-vf scale="iw/2:ih/2"` scales the image to half the size.
+Where `<WORKOUT>` is the name of the workout. Then convert your video of yourself into frames. Create frames with
+
+```bash
+ffmpeg -i input.mp4 -r 30 -vf scale="iw/2:ih/2" frame_%04d.jpg
+```
+
+INSIDE the directory that stores the frames. Here, 30 is the framerate (and should always be 30 fps). The `-vf scale="iw/2:ih/2"` scales the image to half the size (optional).
+
 ## Building
 
 To create a production version of your app:
 
 ```bash
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `bun run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
