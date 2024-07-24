@@ -6,15 +6,28 @@
 		type Pose,
 		type PoseDetector
 	} from '@tensorflow-models/pose-detection';
+	import type Workout from './workouts';
 
 	export let detector: PoseDetector;
-	export let onFrame: (poses: Pose[]) => void;
+	export let workout: Workout;
 	export const fps: number = 30; // Adjust the frame rate as needed
 	const frameRate = 1000 / fps; // Adjust the frame rate as needed
 	let redDotCanvas: HTMLCanvasElement;
 	let videoElement: HTMLVideoElement;
 	let stream: MediaStream;
+	let workoutMode: number | boolean = false;
+	let log = '';
 
+	const startCountdown = () => {
+		const countdownInterval = setInterval(() => {
+			(workoutMode as number)--;
+			if (workoutMode === 0) {
+				clearInterval(countdownInterval);
+				workoutMode = true;
+				workout.recalibrate();
+			}
+		}, 1000);
+	};
 	const startCamera = async () => {
 		try {
 			stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -37,7 +50,9 @@
 
 					// Process the frame data here
 					detector.estimatePoses(imageData).then((poses: Pose[]) => {
-						onFrame(poses);
+						if (workoutMode === true) {
+							log = workout.onFrame(poses);
+						}
 						// Overlay the pose keypoints onto the redDotContext
 						// biome-ignore lint/complexity/noForEach: <explanation>
 						poses.forEach((pose) => {
@@ -92,6 +107,32 @@
 </script>
 
 <button on:click={startCamera}>Start Camera</button>
+<p>{log}</p>
+<button
+	on:click={() => {
+		if (workoutMode === true) {
+			workoutMode = false;
+		} else if (workoutMode === false) {
+			workoutMode = 5;
+			startCountdown();
+		} else if (typeof workoutMode === 'number') {
+			workoutMode = false;
+		}
+	}}
+	>{typeof workoutMode === 'boolean'
+		? workoutMode
+			? 'Stop workout'
+			: 'Start workout'
+		: `Workout starting in ${workoutMode} (press to cancel)`}</button
+>
+<!-- {#if workoutMode === true}
+	<button
+		on:click={() => {
+			workout.recalibrate();
+		}}>Recalibrate (press if there's too many frame rejections)</button
+	>
+{/if} -->
+
 <div>
 	<video bind:this={videoElement} autoplay style="transform:scaleX(-1);display:none;"></video>
 	<canvas bind:this={redDotCanvas} width="640" height="480" style="transform:scaleX(-1)"></canvas>
