@@ -1,6 +1,6 @@
 # pushup-counter-sveltekit
 
-A prototype repo for [45](https://github.com/ThatXliner/45). Demo [here](https://thatxliner.github.io/pushup-counter-sveltekit/). Currently implements
+A prototype repo. Demo [here](https://thatxliner.github.io/pushup-counter-sveltekit/). Currently implements
 
 - pushup detection
 
