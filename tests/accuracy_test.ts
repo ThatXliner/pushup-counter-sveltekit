@@ -7,6 +7,7 @@ import tfnode from '@tensorflow/tfjs-node';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
+import { normalizePoses } from '$lib/workouts';
 
 async function runModel(workout: string, model: Workout) {
 	console.log('Creating pose estimator');
@@ -32,11 +33,14 @@ async function runModel(workout: string, model: Workout) {
 		);
 		console.log('Running model');
 		let index = 0;
+		model.recalibrate();
 		// I had issues when trying to run this in parallel
 		for (const frame of frames) {
 			const image = tfnode.node.decodeImage(frame) as tf.Tensor3D;
-			const pose = await detector.estimatePoses(image, {}, index++ * (1 / 60) * 1000);
-			model.onFrame(pose);
+			const height = image.shape[0];
+			const width = image.shape[1];
+			const poses = await detector.estimatePoses(image, {}, index++ * (1 / 30) * 1000);
+			model.onFrame(normalizePoses(poses, height, width));
 			// console.log(index, model.getDetectionCount());
 		}
 		expect(model.getDetectionCount()).toBe(Number.parseInt(folder));
