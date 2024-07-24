@@ -7,6 +7,7 @@
 		type PoseDetector
 	} from '@tensorflow-models/pose-detection';
 	import type Workout from './workouts';
+	import { normalizePoses } from './workouts';
 
 	export let detector: PoseDetector;
 	export let workout: Workout;
@@ -51,7 +52,7 @@
 					// Process the frame data here
 					detector.estimatePoses(imageData).then((poses: Pose[]) => {
 						if (workoutMode === true) {
-							log = workout.onFrame(poses);
+							log = workout.onFrame(normalizePoses(poses, canvas.height, canvas.width));
 						}
 						// Overlay the pose keypoints onto the redDotContext
 						// biome-ignore lint/complexity/noForEach: <explanation>

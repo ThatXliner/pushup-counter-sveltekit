@@ -8,7 +8,7 @@ export default class Pushup extends Workout {
 	private average_right_wrist: { x: number; y: number } | null;
 	private iterations: number;
 
-	private readonly FRAME_REJECTION_THRESHOLD = 15;
+	private readonly FRAME_REJECTION_THRESHOLD = 0.2;
 	constructor() {
 		super();
 		this.isUp = true;
@@ -112,7 +112,7 @@ export default class Pushup extends Workout {
 		const are_elbows_bent =
 			left_elbow_angle * (180 / Math.PI) < 90 && right_elbow_angle * (180 / Math.PI) < 90;
 		// XXX: Tuned to my personal arm lengths
-		const chest_close_to_ground = nose_to_right_wrist < 130 && nose_to_left_wrist < 130;
+		const chest_close_to_ground = nose_to_right_wrist < 0.45 && nose_to_left_wrist < 0.45;
 
 		const isDown = are_elbows_bent && chest_close_to_ground;
 		if (isDown) {

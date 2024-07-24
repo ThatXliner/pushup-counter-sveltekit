@@ -33,3 +33,18 @@ export default abstract class Workout {
 	abstract onFrame(poses: Pose[]): string;
 	abstract recalibrate(): void;
 }
+export function normalizePoses(poses: Pose[], height: number, width: number): Pose[] {
+	if (poses.length === 0) {
+		return [];
+	} else {
+		return [
+			{
+				...poses[0],
+				keypoints: poseDetection.calculators.keypointsToNormalizedKeypoints(poses[0].keypoints, {
+					height,
+					width
+				})
+			}
+		];
+	}
+}
