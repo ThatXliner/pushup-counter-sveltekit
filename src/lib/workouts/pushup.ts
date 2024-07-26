@@ -34,7 +34,7 @@ export default class Pushup extends Workout {
 	}
 	public onFrame(poses: Pose[]): string {
 		if (poses.length === 0) return 'No poses detected';
-		this.iterations++;
+		this.iterations++; // For calculating the running average
 		const keypoints = poses[0].keypoints;
 		const left_shoulder = keypoints.find((keypoint) => keypoint.name === 'left_shoulder')!;
 		const right_shoulder = keypoints.find((keypoint) => keypoint.name === 'right_shoulder')!;
@@ -43,10 +43,15 @@ export default class Pushup extends Workout {
 		const left_wrist = keypoints.find((keypoint) => keypoint.name === 'left_wrist')!;
 		const right_wrist = keypoints.find((keypoint) => keypoint.name === 'right_wrist')!;
 
-		// keep a running average
+		// Keep a running average for frame rejection.
+		// Frame rejection occurs when the wrists move too much.
 		// We don't use exponential running average because from testing,
 		// it stabilizes too fast, allowing for cheating. Using a regular
-		// running average punishes large movements greatly
+		// running average punishes large movements greatly.
+
+		// Yes, you can sort of cheat it by moving your wrists really slowly
+		// (because we haven't implemented detection of feet as it's quite flaky)
+		// but at that point, it's an exercise in itself.
 		if (this.average_left_wrist === null) {
 			this.average_left_wrist = left_wrist;
 		} else {
