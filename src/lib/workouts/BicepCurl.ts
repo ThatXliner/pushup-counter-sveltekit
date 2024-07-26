@@ -30,9 +30,6 @@ export default class BicepCurl extends Workout {
       this.isUp = !this.isUp;
     }
 
-    const wrist_elbow_length = (wrist.x - elbow.x) ** 2 + (wrist.y - elbow.y) ** 2;
-    const slope = (elbow.y - wrist.y) / (elbow.x - wrist.x);
-
 		return `Curls: ${this.count}`;
 	}
 
@@ -42,7 +39,6 @@ export default class BicepCurl extends Workout {
 
   public recalibrate(): void {
     this.isUp = false;
-    this.count = 0;
   }
 
   public static testCurl(wrist: Keypoint, elbow: Keypoint, state: boolean): boolean {
