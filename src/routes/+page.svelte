@@ -4,7 +4,7 @@
 	// Register one of the TF.js backends.
 	import '@tensorflow/tfjs-backend-webgl';
 	import CameraPreview from '$lib/CameraPreview.svelte';
-	import Pushup from '$lib/workouts/pushup';
+	import BicepCurl from '$lib/workouts/BicepCurl';
 	import type Workout from '$lib/workouts';
 	// import '@tensorflow/tfjs-backend-wasm';
 
@@ -13,7 +13,7 @@
 			await tf.ready();
 		})();
 	});
-	const workout: Workout = $state(new Pushup());
+	const workout: Workout = $state(new BicepCurl('left'));
 	const modelConfig = $derived(workout.getModelConfigurations());
 	const detectorPromise = $derived(
 		poseDetection.createDetector(modelConfig.type, modelConfig.config)
