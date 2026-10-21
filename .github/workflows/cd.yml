@@ -11,17 +11,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # If you're using pnpm, add this step then change the commands and cache key below to use `pnpm`
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Verify TLS certificate rejection
+        run: node .github/scripts/check-tls.cjs
 
       - name: Install dependencies
-        run: bun install
+        run: npm ci
 
       - name: build
         env:
           BASE_PATH: '/${{ github.event.repository.name }}'
         run: |
-          bun run build
+          npm run build
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
